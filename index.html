@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI 智慧 HTML 測驗系統</title>
+<title>HTML ＆CSS測驗系統</title>
+
 <style>
 body {
 font-family: Arial,sans-serif;
@@ -128,15 +129,16 @@ font-weight:bold;
 }
 </style>
 </head>
+
 <body>
 
 <div class="card">
 
 <div id="nameScreen">
 <h1>AI 智慧 HTML 測驗系統</h1>
-<p>共 20 題｜請輸入姓名後開始測驗</p>
+<p>共 20 題｜測驗結果會自動儲存到雲端資料庫</p>
 
-<input id="nameInput" placeholder="姓名或學號"
+<input id="nameInput" placeholder="請輸入姓名或學號"
 style="width:100%;padding:14px;border-radius:12px;border:1px solid #ccc;">
 
 <br><br>
@@ -144,6 +146,7 @@ style="width:100%;padding:14px;border-radius:12px;border:1px solid #ccc;">
 <button onclick="startQuiz()" style="background:#111;color:white;">
 開始測驗
 </button>
+
 </div>
 
 <div id="quizScreen" style="display:none;">
@@ -155,6 +158,7 @@ style="width:100%;padding:14px;border-radius:12px;border:1px solid #ccc;">
 </div>
 
 <div class="answer-wrap">
+
 <div class="correct-box">
 ✅ 答對：<span id="scoreText">0</span>
 </div>
@@ -162,6 +166,7 @@ style="width:100%;padding:14px;border-radius:12px;border:1px solid #ccc;">
 <div class="wrong-box">
 ❌ 答錯：<span id="wrongText">0</span>
 </div>
+
 </div>
 
 </div>
@@ -187,26 +192,28 @@ style="display:none;background:#111;color:white;">
 <script>
 
 const questions = [
-{q:"HTML 的全名是什麼？",opts:['HyperText Markup Language', 'HighTech Marking Links', 'HyperTool Main Language'],ans:0,exp:"HTML 代表超文字標記語言。"},
-{q:"HTML 的本質是什麼？",opts:['程式語言', '標記語言', '影像格式'],ans:1,exp:"HTML 是標記語言。"},
-{q:"伺服器與瀏覽器之間透過什麼協定進行對話？",opts:['HTML', 'HTTP', 'CSS'],ans:1,exp:"HTTP 是網頁傳輸協定。"},
-{q:"網頁檔案的預設主檔案名稱通常叫什麼？",opts:['main.html', 'home.html', 'index.html'],ans:2,exp:"index.html 是預設首頁檔案。"},
-{q:"HTML 標籤層層包裹的結構稱為什麼？",opts:['網狀結構', '巢狀結構', '水平結構'],ans:1,exp:"HTML 使用巢狀結構。"},
-{q:"實際在網頁畫面中看到的內容，是寫在哪個標籤內？",opts:['&lt;head&gt;', '&lt;body&gt;', '&lt;meta&gt;'],ans:1,exp:"&lt;body&gt; 包含網頁可見內容。"},
-{q:"代表最重要大標題的標籤是？",opts:['&lt;h6&gt;', '&lt;h1&gt;', '&lt;p&gt;'],ans:1,exp:"&lt;h1&gt; 是最高層級標題。"},
-{q:"HTML5 語意標籤中，&lt;nav&gt; 的主要用途是？",opts:['放廣告', '放導覽列', '放版權'],ans:1,exp:"&lt;nav&gt; 用於網站導覽。"},
-{q:"網頁底部版權資訊通常放在哪個標籤？",opts:['&lt;header&gt;', '&lt;section&gt;', '&lt;footer&gt;'],ans:2,exp:"&lt;footer&gt; 用於頁尾資訊。"},
-{q:"想建立有順序的清單要用哪個標籤？",opts:['&lt;ul&gt;', '&lt;ol&gt;', '&lt;li&gt;'],ans:1,exp:"&lt;ol&gt; 是有序清單。"},
-{q:"超連結標籤 &lt;a&gt; 使用哪個屬性指定網址？",opts:['src', 'href', 'alt'],ans:1,exp:"href 用來指定連結網址。"},
-{q:"圖片標籤 &lt;img&gt; 的替代文字屬性是？",opts:['title', 'alt', 'href'],ans:1,exp:"alt 是圖片替代文字。"},
-{q:"哪個標籤可強制換行？",opts:['&lt;br&gt;', '&lt;hr&gt;', '&lt;p&gt;'],ans:0,exp:"&lt;br&gt; 可強制換行。"},
-{q:"哪個標籤代表主要內容區？",opts:['&lt;main&gt;', '&lt;div&gt;', '&lt;aside&gt;'],ans:0,exp:"&lt;main&gt; 代表頁面主要內容。"},
-{q:"HTML 註解的正確寫法是？",opts:['// 註解', '/* 註解 */', '&lt;!-- 註解 --&gt;'],ans:2,exp:"HTML 註解使用 &lt;!-- --&gt;。"},
-{q:"哪個標籤可建立表格列？",opts:['&lt;td&gt;', '&lt;table&gt;', '&lt;tr&gt;'],ans:2,exp:"&lt;tr&gt; 代表表格列。"},
-{q:"colspan 的用途是？",opts:['垂直合併', '水平合併', '設定邊框'],ans:1,exp:"colspan 用於水平跨欄。"},
-{q:"target='_blank' 的作用是？",opts:['新分頁開啟', '重新整理', '下載檔案'],ans:0,exp:"_blank 可在新分頁開啟。"},
-{q:"哪個標籤可插入圖片？",opts:['&lt;img&gt;', '&lt;picture&gt;', '&lt;src&gt;'],ans:0,exp:"&lt;img&gt; 用來插入圖片。"},
-{q:"CSS 通常使用哪種副檔名？",opts:['.html', '.css', '.js'],ans:1,exp:"CSS 檔案副檔名是 .css。"}
+
+{q:"HTML 的全名是什麼？",opts:["HyperText Markup Language","HighTech Marking Links","HyperTool Main Language"],ans:0,exp:"HTML 代表超文字標記語言。"},
+{q:"HTML 的本質是什麼？",opts:["程式語言","標記語言","影像格式"],ans:1,exp:"HTML 是標記語言。"},
+{q:"伺服器與瀏覽器之間透過什麼協定進行對話？",opts:["HTML","HTTP","CSS"],ans:1,exp:"HTTP 是網頁傳輸協定。"},
+{q:"網頁檔案的預設主檔案名稱通常叫什麼？",opts:["main.html","home.html","index.html"],ans:2,exp:"index.html 是預設首頁檔案。"},
+{q:"HTML 標籤層層包裹的結構稱為什麼？",opts:["網狀結構","巢狀結構","水平結構"],ans:1,exp:"HTML 使用巢狀結構。"},
+{q:"實際在網頁畫面中看到的內容，是寫在哪個標籤內？",opts:["&lt;head&gt;","&lt;body&gt;","&lt;meta&gt;"],ans:1,exp:"&lt;body&gt; 包含網頁可見內容。"},
+{q:"代表最重要大標題的標籤是？",opts:["&lt;h6&gt;","&lt;h1&gt;","&lt;p&gt;"],ans:1,exp:"&lt;h1&gt; 是最高層級標題。"},
+{q:"HTML5 語意標籤中，&lt;nav&gt; 的主要用途是？",opts:["放廣告","放導覽列","放版權"],ans:1,exp:"&lt;nav&gt; 用於網站導覽。"},
+{q:"網頁底部版權資訊通常放在哪個標籤？",opts:["&lt;header&gt;","&lt;section&gt;","&lt;footer&gt;"],ans:2,exp:"&lt;footer&gt; 用於頁尾資訊。"},
+{q:"想建立有順序的清單要用哪個標籤？",opts:["&lt;ul&gt;","&lt;ol&gt;","&lt;li&gt;"],ans:1,exp:"&lt;ol&gt; 是有序清單。"},
+{q:"超連結標籤 &lt;a&gt; 使用哪個屬性指定網址？",opts:["src","href","alt"],ans:1,exp:"href 用來指定連結網址。"},
+{q:"圖片標籤 &lt;img&gt; 的替代文字屬性是？",opts:["title","alt","href"],ans:1,exp:"alt 是圖片替代文字。"},
+{q:"哪個標籤可強制換行？",opts:["&lt;br&gt;","&lt;hr&gt;","&lt;p&gt;"],ans:0,exp:"&lt;br&gt; 可強制換行。"},
+{q:"哪個標籤代表主要內容區？",opts:["&lt;main&gt;","&lt;div&gt;","&lt;aside&gt;"],ans:0,exp:"&lt;main&gt; 代表頁面主要內容。"},
+{q:"HTML 註解的正確寫法是？",opts:["// 註解","/* 註解 */","&lt;!-- 註解 --&gt;"],ans:2,exp:"HTML 註解使用 &lt;!-- --&gt;。"},
+{q:"哪個標籤可建立表格列？",opts:["&lt;td&gt;","&lt;table&gt;","&lt;tr&gt;"],ans:2,exp:"&lt;tr&gt; 代表表格列。"},
+{q:"colspan 的用途是？",opts:["垂直合併","水平合併","設定邊框"],ans:1,exp:"colspan 用於水平跨欄。"},
+{q:"target='_blank' 的作用是？",opts:["新分頁開啟","重新整理","下載檔案"],ans:0,exp:"_blank 可在新分頁開啟。"},
+{q:"哪個標籤可插入圖片？",opts:["&lt;img&gt;","&lt;picture&gt;","&lt;src&gt;"],ans:0,exp:"&lt;img&gt; 用來插入圖片。"},
+{q:"CSS 通常使用哪種副檔名？",opts:[".html",".css",".js"],ans:1,exp:"CSS 檔案副檔名是 .css。"}
+
 ];
 
 let idx = 0;
@@ -217,13 +224,17 @@ let userName = '';
 
 function startQuiz(){
 const n = document.getElementById('nameInput').value.trim();
+
 if(!n){
-alert('請輸入姓名');
+alert('請輸入姓名/座號');
 return;
 }
+
 userName=n;
+
 document.getElementById('nameScreen').style.display='none';
 document.getElementById('quizScreen').style.display='block';
+
 renderQ();
 }
 
@@ -244,14 +255,21 @@ document.getElementById('qText').innerHTML =
 `Q${idx+1}. ${q.q}`;
 
 const area = document.getElementById('optionsArea');
+
 area.innerHTML='';
 
 q.opts.forEach((o,i)=>{
+
 const btn=document.createElement('button');
+
 btn.className='opt-btn';
+
 btn.innerHTML=o;
+
 btn.onclick=()=>pick(i);
+
 area.appendChild(btn);
+
 });
 
 document.getElementById('explainBox').innerHTML='';
@@ -259,18 +277,27 @@ document.getElementById('nextBtn').style.display='none';
 }
 
 function pick(i){
+
 const q=questions[idx];
+
 const btns=document.querySelectorAll('.opt-btn');
 
 btns.forEach(b=>b.disabled=true);
 
 if(i===q.ans){
+
 btns[i].classList.add('correct');
+
 score++;
+
 } else {
+
 btns[i].classList.add('wrong');
+
 btns[q.ans].classList.add('reveal');
+
 wrong++;
+
 }
 
 updateTopbar();
@@ -289,6 +316,7 @@ document.getElementById('nextBtn').style.display='inline-block';
 }
 
 function nextQ(){
+
 idx++;
 
 if(idx<questions.length){
@@ -296,10 +324,39 @@ renderQ();
 } else {
 showScore();
 }
+
 }
 
-function showScore(){
+async function saveResult(){
+
+const payload = {
+name:userName,
+score:score,
+wrong:wrong,
+percent:Math.round(score/questions.length*100),
+history:history
+};
+
+try {
+
+await fetch('https://script.google.com/macros/s/AKfycbwQFho0NIqup9YrjdoCtJvNr25HQAPx4MkQtPmQZntjwWQUk9nQMnyli-qwTGM1RnZQ/exec', {
+method:'POST',
+body:JSON.stringify(payload)
+});
+
+console.log('成績已寫入 Google 資料庫');
+
+} catch(err) {
+console.error(err);
+}
+
+}
+
+async function showScore(){
+
 document.getElementById('quizScreen').style.display='none';
+
+await saveResult();
 
 const pct=Math.round(score/questions.length*100);
 
@@ -342,11 +399,18 @@ ${wrongItems.length===0 ? `
 </div>
 `).join('')}
 
+<br>
+
+<div style="background:#e8fff0;padding:15px;border-radius:12px;">
+✅ 成績已自動儲存到雲端資料庫
+</div>
+
 <button onclick="location.reload()"
 style="background:#111;color:white;margin-top:20px;">
 重新測驗
 </button>
 `;
+
 }
 
 </script>
