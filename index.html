@@ -3,475 +3,361 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HTML 核心觀念測驗</title>
+<title>AI 智慧 HTML 測驗系統</title>
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #f7f6f2;
-    --surface: #ffffff;
-    --surface2: #f0efe9;
-    --border: rgba(0,0,0,0.1);
-    --border2: rgba(0,0,0,0.18);
-    --text: #1a1a18;
-    --text2: #6b6b65;
-    --text3: #9a9a94;
-    --green-bg: #eaf3de;
-    --green-border: #3b6d11;
-    --green-text: #27500a;
-    --red-bg: #fcebeb;
-    --red-border: #a32d2d;
-    --red-text: #791f1f;
-    --teal: #1d9e75;
-    --teal-light: #5dcaa5;
-    --radius: 10px;
-    --radius-lg: 14px;
-  }
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+padding:20px;
+}
 
-  body {
-    font-family: 'Helvetica Neue', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 2rem 1rem 4rem;
-  }
+.card{
+max-width:760px;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 2px 12px rgba(0,0,0,.1);
+}
 
-  .card {
-    background: var(--surface);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border);
-    padding: 2rem;
-    width: 100%;
-    max-width: 640px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-  }
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+font-size:14px;
+}
 
-  /* Header */
-  .quiz-header { margin-bottom: 1.5rem; }
-  .quiz-logo {
-    display: inline-flex; align-items: center; gap: 8px;
-    font-size: 13px; font-weight: 500; color: var(--teal);
-    border: 1px solid var(--teal-light);
-    background: #e1f5ee;
-    border-radius: 20px; padding: 4px 12px; margin-bottom: 1rem;
-  }
-  .quiz-logo span { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); display: inline-block; }
-  .quiz-title { font-size: 22px; font-weight: 600; line-height: 1.3; margin-bottom: 0.35rem; }
-  .quiz-sub { font-size: 14px; color: var(--text2); }
+.progress-box{
+background:#eef6ff;
+padding:8px 14px;
+border-radius:10px;
+}
 
-  /* Progress */
-  .progress-wrap { margin-bottom: 1.5rem; }
-  .progress-info { display: flex; justify-content: space-between; font-size: 12px; color: var(--text3); margin-bottom: 6px; }
-  .progress-bg { height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
-  .progress-fill { height: 5px; background: var(--teal); border-radius: 3px; transition: width 0.4s ease; }
+.score-box{
+background:#ecfff0;
+padding:8px 14px;
+border-radius:10px;
+}
 
-  /* Question */
-  .q-text {
-    font-size: 16px; font-weight: 500; line-height: 1.65;
-    margin-bottom: 1.25rem; color: var(--text);
-  }
-  .q-num { color: var(--teal); margin-right: 4px; }
+button{
+padding:12px 16px;
+margin-top:10px;
+cursor:pointer;
+border:none;
+border-radius:10px;
+font-size:15px;
+}
 
-  /* Options */
-  .options { display: grid; gap: 8px; margin-bottom: 1rem; }
-  .opt-btn {
-    width: 100%; text-align: left;
-    padding: 12px 16px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border2);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 14px; font-family: inherit;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, transform 0.1s;
-    line-height: 1.5;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .opt-btn:hover:not(:disabled) { background: var(--surface2); border-color: var(--border2); }
-  .opt-btn:active:not(:disabled) { transform: scale(0.99); }
-  .opt-letter {
-    width: 26px; height: 26px; border-radius: 50%;
-    border: 1px solid var(--border2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 500; flex-shrink: 0;
-    color: var(--text2); background: var(--surface2);
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
-  }
-  .opt-btn.correct { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
-  .opt-btn.correct .opt-letter { background: var(--green-border); border-color: var(--green-border); color: #fff; }
-  .opt-btn.wrong { background: var(--red-bg); border-color: var(--red-border); color: var(--red-text); }
-  .opt-btn.wrong .opt-letter { background: var(--red-border); border-color: var(--red-border); color: #fff; }
-  .opt-btn.reveal { background: var(--green-bg); border-color: var(--green-border); color: var(--green-text); }
-  .opt-btn.reveal .opt-letter { background: var(--green-border); border-color: var(--green-border); color: #fff; }
-  .opt-btn:disabled { cursor: default; }
+.opt-btn{
+display:block;
+width:100%;
+margin-bottom:10px;
+text-align:left;
+background:#fafafa;
+border:1px solid #ddd;
+}
 
-  /* Explain */
-  .explain-box {
-    margin-bottom: 1rem; padding: 10px 14px;
-    border-radius: var(--radius);
-    background: var(--surface2);
-    border-left: 3px solid var(--teal);
-    font-size: 13px; color: var(--text2); line-height: 1.65;
-    display: none;
-  }
-  .explain-box strong { color: var(--teal); }
+.opt-btn:hover{
+background:#f0f0f0;
+}
 
-  /* Buttons */
-  .next-btn {
-    padding: 11px 28px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border2);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 14px; font-family: inherit; font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-    display: none;
-  }
-  .next-btn:hover { background: var(--surface2); }
-  .green-btn {
-    padding: 11px 28px;
-    border-radius: var(--radius);
-    border: 1px solid var(--green-border);
-    background: var(--green-bg);
-    color: var(--green-text);
-    font-size: 14px; font-family: inherit; font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-  .green-btn:hover { background: #c0dd97; }
+.correct{
+background:#dff0d8;
+}
 
-  /* Name screen */
-  .name-wrap { }
-  .form-label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 6px; margin-top: 1.25rem; }
-  .name-input {
-    width: 100%; padding: 11px 14px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border2);
-    background: var(--surface);
-    color: var(--text);
-    font-size: 15px; font-family: inherit;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .name-input:focus { border-color: var(--teal); }
-  .name-input.err { border-color: #e24b4a; }
-  .err-msg { font-size: 12px; color: #e24b4a; margin-top: 5px; display: none; }
+.wrong{
+background:#f2dede;
+}
 
-  /* Score screen */
-  .score-wrap { text-align: center; }
-  .score-ring {
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    border: 3px solid var(--teal);
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    margin: 0 auto 1.25rem;
-    background: var(--green-bg);
-  }
-  .score-num { font-size: 30px; font-weight: 600; color: var(--green-text); }
-  .score-lbl { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .score-grade { font-size: 18px; font-weight: 600; margin-bottom: 0.3rem; }
-  .score-pct { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; }
+.reveal{
+background:#d9edf7;
+}
 
-  .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 1.5rem; }
-  .stat-box { background: var(--surface2); border-radius: var(--radius); padding: 10px 12px; text-align: center; }
-  .stat-val { font-size: 22px; font-weight: 600; color: var(--text); }
-  .stat-key { font-size: 11px; color: var(--text3); margin-top: 3px; }
+#explainBox{
+margin-top:15px;
+padding:15px;
+background:#f8f8f8;
+border-radius:10px;
+line-height:1.6;
+}
 
-  /* History */
-  .section-title {
-    font-size: 13px; font-weight: 500; color: var(--text2);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 6px; margin-bottom: 10px;
-    display: flex; align-items: center; gap: 6px;
-    text-align: left;
-  }
-  .h-row {
-    display: flex; gap: 10px; align-items: flex-start;
-    padding: 9px 0; border-bottom: 1px solid var(--border);
-    font-size: 13px; text-align: left;
-  }
-  .h-dot {
-    width: 20px; height: 20px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 600; flex-shrink: 0; margin-top: 1px;
-  }
-  .h-dot.ok { background: var(--green-bg); color: var(--green-text); }
-  .h-dot.no { background: var(--red-bg); color: var(--red-text); }
-  .h-q { flex: 1; line-height: 1.5; color: var(--text); }
-  .h-ans { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.summary-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin:20px 0;
+}
 
-  .lb-section { margin-top: 1.5rem; text-align: left; }
-  .lb-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 8px 10px; border-radius: var(--radius);
-    font-size: 13px; margin-bottom: 4px;
-    background: var(--surface2);
-  }
-  .lb-name { flex: 1; font-weight: 500; }
-  .lb-score { color: var(--teal); font-weight: 600; }
-  .lb-date { font-size: 11px; color: var(--text3); }
+.summary-card{
+background:#fafafa;
+padding:15px;
+border-radius:12px;
+text-align:center;
+border:1px solid #eee;
+}
 
-  /* DB badge */
-  .db-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 11px; color: var(--text3);
-    border: 1px solid var(--border);
-    border-radius: 20px; padding: 3px 10px; margin-bottom: 1rem;
-  }
-  .db-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.summary-number{
+font-size:28px;
+font-weight:bold;
+}
 
-  /* Responsive */
-  @media (max-width: 480px) {
-    body { padding: 1rem 0.75rem 3rem; }
-    .card { padding: 1.5rem 1.25rem; }
-    .quiz-title { font-size: 19px; }
-  }
 </style>
 </head>
+
 <body>
+
 <div class="card">
 
-  <!-- Name Screen -->
-  <div id="nameScreen">
-    <div class="quiz-header">
-      <div class="quiz-logo"><span></span> WEB 課程測驗</div>
-      <div class="quiz-title">HTML 核心觀念測驗</div>
-      <div class="quiz-sub">共 25 題 · 依據課堂講義出題 · 完成後自動記錄成績</div>
-    </div>
-    <div style="background:var(--surface2);border-radius:var(--radius);padding:14px 16px;font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:1rem;">
-      📋 測驗涵蓋：HTML 基本概念、標籤架構、語意標籤、超連結、表格、清單等主題。
-    </div>
-    <label class="form-label" for="nameInput">姓名或學號（必填）</label>
-    <input class="name-input" id="nameInput" placeholder="例：王小明 / S1001" autocomplete="off" />
-    <div class="err-msg" id="errMsg">請輸入姓名或學號後再開始</div>
-    <div style="margin-top:1.25rem;">
-      <button class="green-btn" onclick="startQuiz()">開始測驗 →</button>
-    </div>
-  </div>
+<div id="nameScreen">
 
-  <!-- Quiz Screen -->
-  <div id="quizScreen" style="display:none;">
-    <div class="db-badge"><div class="db-dot"></div> 成績記錄中</div>
-    <div class="progress-wrap">
-      <div class="progress-info">
-        <span id="qCounter">第 1 題 / 共 25 題</span>
-        <span id="scoreTrack">答對：0</span>
-      </div>
-      <div class="progress-bg"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
-    </div>
-    <div class="q-text" id="qText"></div>
-    <div class="options" id="optionsArea"></div>
-    <div class="explain-box" id="explainBox"></div>
-    <button class="next-btn" id="nextBtn" onclick="nextQ()">下一題 →</button>
-  </div>
+<h1>AI 智慧 HTML 測驗系統</h1>
 
-  <!-- Score Screen -->
-  <div id="scoreScreen" style="display:none;"></div>
+<p>請輸入姓名後開始測驗</p>
+
+<input id="nameInput" placeholder="姓名或學號"
+style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
+
+<br><br>
+
+<button onclick="startQuiz()" style="background:#222;color:white;">
+開始測驗
+</button>
+
+</div>
+
+<div id="quizScreen" style="display:none;">
+
+<div class="topbar">
+
+<div class="progress-box">
+📘 進度：<span id="progressText">1 / 10</span>
+</div>
+
+<div class="score-box">
+✅ 答對：<span id="scoreText">0</span>
+❌ 答錯：<span id="wrongText">0</span>
+</div>
+
+</div>
+
+<h2 id="qText"></h2>
+
+<div id="optionsArea"></div>
+
+<div id="explainBox"></div>
+
+<button id="nextBtn"
+onclick="nextQ()"
+style="display:none;background:#222;color:white;">
+下一題
+</button>
+
+</div>
+
+<div id="scoreScreen" style="display:none;"></div>
 
 </div>
 
 <script>
+
 const questions = [
-  {q:"HTML 的全名是什麼？",opts:["HyperText Markup Language","HighTech Marking Links","HyperTool Main Language"],ans:0,exp:"HTML 代表超文字標記語言（HyperText Markup Language）。"},
-  {q:"HTML 的本質是什麼？",opts:["程式語言","標記語言","影像格式"],ans:1,exp:"HTML 是標記語言而非程式語言，用來定義網頁的結構與內容。"},
-  {q:"伺服器與瀏覽器之間透過什麼「協定」進行對話？",opts:["HTML","HTTP","CSS"],ans:1,exp:"HTTP（HyperText Transfer Protocol）是網頁傳輸的通訊協定。"},
-  {q:"在網頁空白處點擊右鍵選擇「檢查」時，會看到什麼？",opts:["伺服器密碼","HTML 原始碼","網路速度"],ans:1,exp:"檢查功能（DevTools）可查看網頁的 HTML 結構與原始碼。"},
-  {q:"網頁檔案的預設主檔案名稱通常叫什麼？",opts:["main.html","home.html","index.html"],ans:2,exp:"index.html 是伺服器預設讀取的首頁檔案。"},
-  {q:"在 HTML 檔案中，負責「網頁樣式／顏色」的通常是哪種檔案？",opts:[".js",".css",".jpg"],ans:1,exp:"CSS（.css）負責網頁的美化與佈局樣式。"},
-  {q:"HTML 標籤層層包裹的結構，稱為什麼？",opts:["網狀結構","巢狀結構","水平結構"],ans:1,exp:"標籤包含關係形成巢狀結構（Nested Structure），如樹狀階層。"},
-  {q:"標籤內額外的設定（如 style=\"...\"），這個 style 稱為什麼？",opts:["元素","內容","屬性（Attribute）"],ans:2,exp:"屬性（Attribute）提供元素的額外資訊或設定，寫在開始標籤內。"},
-  {q:"關於「成對標籤」，下列敘述何者錯誤？",opts:["結束標籤通常多一個 /","必須先有開始才有結束","結束標籤的數目不需要跟開始標籤一樣多"],ans:2,exp:"每個開啟的標籤都必須正確關閉，開始與結束標籤數量應一致。"},
-  {q:"下列哪一個是「獨立標籤（空標籤）」，不需要結束標籤？",opts:["&lt;p&gt;","&lt;img&gt;","&lt;body&gt;"],ans:1,exp:"<img>、<br> 等標籤為獨立標籤（Void Element），不需要結束標籤。"},
-  {q:"在 HTML 中，所有的內容都應該包裹在什麼標籤之內？",opts:["&lt;html&gt;","&lt;head&gt;","&lt;title&gt;"],ans:0,exp:"<html> 標籤是所有網頁元素的根元素（Root Element）。"},
-  {q:"哪一個區塊負責定義網頁的資訊（如標題、屬性），但不會顯示在頁面內容中？",opts:["&lt;head&gt;","&lt;body&gt;","&lt;main&gt;"],ans:0,exp:"<head> 包含網頁的中繼資料與設定，不顯示於網頁畫面。"},
-  {q:"哪一個標籤定義的內容，會顯示在瀏覽器的「分頁標籤」上？",opts:["&lt;h1&gt;","&lt;title&gt;","&lt;footer&gt;"],ans:1,exp:"<title> 內容會顯示於瀏覽器標籤欄，也是 SEO 重要項目。"},
-  {q:"實際在網頁畫面中看到的內容（文字、圖片），是寫在哪個標籤內？",opts:["&lt;head&gt;","&lt;body&gt;","<meta>"],ans:1,exp:"<body> 包含網頁可見的所有內容，包括文字、圖片、表格等。"},
-  {q:"代表網頁中「最重要大標題」的標籤是？",opts:["&lt;h6&gt;","&lt;h1&gt;","&lt;p&gt;"],ans:1,exp:"<h1> 是等級最高、最重要的標題，一個頁面通常只用一次。"},
-  {q:"HTML5 語意標籤中，&lt;nav&gt; 的主要用途是什麼？",opts:["放置廣告","放置導覽列或選單","放置版權聲明"],ans:1,exp:"<nav> 取自 navigation（導覽），用於放置網站導覽連結或選單。"},
-  {q:"網頁最底部的版權資訊與聯絡方式，通常放在哪個標籤？",opts:["&lt;header&gt;","&lt;section&gt;","&lt;footer&gt;"],ans:2,exp:"<footer> 用於定義網頁或區塊的底部資訊，如版權、聯絡方式。"},
-  {q:"想建立一個「有順序（1. 2. 3.）」的清單，外層標籤要用？",opts:["&lt;ul&gt;","&lt;ol&gt;","&lt;li&gt;"],ans:1,exp:"<ol> 代表 Ordered List（有序清單），會自動產生編號。"},
-  {q:"超連結標籤 &lt;a&gt; 使用哪個屬性來指向連結地址？",opts:["src","href","alt"],ans:1,exp:"href（Hypertext Reference）是 <a> 標籤指定連結目標地址的屬性。"},
-  {q:"圖片標籤 &lt;img&gt; 若想設定圖片沒跑出來時的替代文字，要用哪個屬性？",opts:["title","alt","link"],ans:1,exp:"alt（Alternative Text）於圖片無法顯示時提供替代文字說明。"},
-  {q:"表格標籤中，用來水平合併儲存格（跨欄）的屬性是？",opts:["rowspan","colspan","border"],ans:1,exp:"colspan 用於水平跨欄合併儲存格；rowspan 則是垂直跨列合併。"},
-  {q:"下列何者是 HTML 註解的正確寫法？",opts:["// 這是註解","/* 這是註解 */","&lt;!-- 這是註解 --&gt;"],ans:2,exp:"HTML 註解語法為 <!-- 內容 -->，與 JS（//）和 CSS（/* */）不同。"},
-  {q:"哪一個標籤代表網頁的主要內容區（通常一頁只有一個）？",opts:["&lt;article&gt;","&lt;main&gt;","&lt;div&gt;"],ans:1,exp:"<main> 定義文件的主體內容，一個頁面通常只應出現一次。"},
-  {q:"&lt;br&gt; 標籤的主要功能是什麼？",opts:["畫一條水平線","換行","加粗文字"],ans:1,exp:"<br>（Line Break）用於強制換行，是獨立標籤，不需結束標籤。"},
-  {q:"想要讓超連結在「新分頁」開啟，應加入哪個屬性設定？",opts:['target="_blank"','target="_self"','rel="new"'],ans:0,exp:'target="_blank" 指定連結在新視窗或新分頁中開啟。'}
+
+{q:"HTML 的全名是什麼？",opts:["HyperText Markup Language","HighTech Marking Links","HyperTool Main Language"],ans:0,exp:"HTML 代表超文字標記語言。"},
+{q:"HTML 的本質是什麼？",opts:["程式語言","標記語言","影像格式"],ans:1,exp:"HTML 是標記語言。"},
+{q:"伺服器與瀏覽器之間透過什麼協定進行對話？",opts:["HTML","HTTP","CSS"],ans:1,exp:"HTTP 是網頁傳輸協定。"},
+{q:"網頁檔案的預設主檔案名稱通常叫什麼？",opts:["main.html","home.html","index.html"],ans:2,exp:"index.html 是預設首頁檔案。"},
+{q:"HTML 標籤層層包裹的結構稱為什麼？",opts:["網狀結構","巢狀結構","水平結構"],ans:1,exp:"HTML 使用巢狀結構。"},
+{q:"實際在網頁畫面中看到的內容，是寫在哪個標籤內？",opts:["&lt;head&gt;","&lt;body&gt;","&lt;meta&gt;"],ans:1,exp:"&lt;body&gt; 包含網頁可見內容。"},
+{q:"代表最重要大標題的標籤是？",opts:["&lt;h6&gt;","&lt;h1&gt;","&lt;p&gt;"],ans:1,exp:"&lt;h1&gt; 是最高層級標題。"},
+{q:"HTML5 語意標籤中，&lt;nav&gt; 的主要用途是？",opts:["放廣告","放導覽列","放版權"],ans:1,exp:"&lt;nav&gt; 用於網站導覽。"},
+{q:"網頁底部版權資訊通常放在哪個標籤？",opts:["&lt;header&gt;","&lt;section&gt;","&lt;footer&gt;"],ans:2,exp:"&lt;footer&gt; 用於頁尾資訊。"},
+{q:"想建立有順序的清單要用哪個標籤？",opts:["&lt;ul&gt;","&lt;ol&gt;","&lt;li&gt;"],ans:1,exp:"&lt;ol&gt; 是有序清單。"}
+
 ];
 
-const STORAGE_KEY = 'html_quiz_scores_v1';
-let idx = 0, score = 0, userName = '', answered = false;
-const history = [];
+let idx = 0;
+let score = 0;
+let wrong = 0;
+let history = [];
+let userName = '';
 
-function loadScores() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
-}
-async function saveScore(name, sc, total, det) {
+function startQuiz(){
 
-  const payload = {
-    name,
-    score: sc,
-    total,
-    pct: Math.round(sc / total * 100),
-    details: det
-  };
+const n = document.getElementById('nameInput').value.trim();
 
-  try {
-
-    await fetch('https://script.google.com/macros/s/AKfycbyCFYtoWkn9jR2L1UinTf_4nXUDhWGkmLLjcmlMxZSmeLgX84Un9KoqxYHVsQjauYzg/exec', {
-      method: 'POST',
-      body: JSON.stringify(payload)
-    });
-
-    console.log('成績已送出');
-
-  } catch(err) {
-
-    console.error('送出失敗', err);
-
-  }
-}
+if(!n){
+alert('請輸入姓名');
+return;
 }
 
-function startQuiz() {
-  const n = document.getElementById('nameInput').value.trim();
-  if (!n) {
-    document.getElementById('nameInput').classList.add('err');
-    document.getElementById('errMsg').style.display = 'block';
-    return;
-  }
-  userName = n;
-  document.getElementById('nameScreen').style.display = 'none';
-  document.getElementById('quizScreen').style.display = 'block';
-  renderQ();
+userName = n;
+
+document.getElementById('nameScreen').style.display='none';
+document.getElementById('quizScreen').style.display='block';
+
+renderQ();
+
 }
 
-document.getElementById('nameInput').addEventListener('input', function() {
-  this.classList.remove('err');
-  document.getElementById('errMsg').style.display = 'none';
+function updateTopbar(){
+
+document.getElementById('progressText').innerText =
+`${idx+1} / ${questions.length}`;
+
+document.getElementById('scoreText').innerText = score;
+
+document.getElementById('wrongText').innerText = wrong;
+
+}
+
+function renderQ(){
+
+updateTopbar();
+
+const q = questions[idx];
+
+document.getElementById('qText').innerHTML =
+`Q${idx+1}. ${q.q}`;
+
+const area = document.getElementById('optionsArea');
+
+area.innerHTML='';
+
+q.opts.forEach((o,i)=>{
+
+const btn = document.createElement('button');
+
+btn.className='opt-btn';
+
+btn.innerHTML=o;
+
+btn.onclick=()=>pick(i);
+
+area.appendChild(btn);
+
 });
 
-function renderQ() {
-  answered = false;
-  const q = questions[idx];
-  const total = questions.length;
-  document.getElementById('qCounter').textContent = `第 ${idx+1} 題 / 共 ${total} 題`;
-  document.getElementById('scoreTrack').textContent = `答對：${score}`;
-  document.getElementById('progFill').style.width = (idx / total * 100) + '%';
-  document.getElementById('qText').innerHTML = `<span class="q-num">Q${idx+1}.</span> ${q.q}`;
-  document.getElementById('explainBox').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'none';
-  const area = document.getElementById('optionsArea');
-  area.innerHTML = '';
-  const letters = ['A','B','C'];
-  q.opts.forEach((o, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${o}</span>`;
-    btn.onclick = () => pick(i);
-    area.appendChild(btn);
-  });
+document.getElementById('explainBox').innerHTML='';
+
+document.getElementById('nextBtn').style.display='none';
+
 }
 
-function pick(i) {
-  if (answered) return;
-  answered = true;
-  const q = questions[idx];
-  const btns = document.querySelectorAll('.opt-btn');
-  btns.forEach(b => b.disabled = true);
-  const correct = i === q.ans;
-  if (correct) { btns[i].classList.add('correct'); score++; }
-  else { btns[i].classList.add('wrong'); btns[q.ans].classList.add('reveal'); }
-  history.push({ q: q.q, correct, yourAns: q.opts[i], rightAns: q.opts[q.ans] });
-  const eb = document.getElementById('explainBox');
-  eb.innerHTML = `<strong>解析：</strong>${q.exp}`;
-  eb.style.display = 'block';
-  const nb = document.getElementById('nextBtn');
-  nb.style.display = 'inline-block';
-  nb.textContent = idx < questions.length - 1 ? '下一題 →' : '查看成績 →';
+function pick(i){
+
+const q = questions[idx];
+
+const btns = document.querySelectorAll('.opt-btn');
+
+btns.forEach(b=>b.disabled=true);
+
+if(i===q.ans){
+
+btns[i].classList.add('correct');
+
+score++;
+
+}else{
+
+btns[i].classList.add('wrong');
+
+btns[q.ans].classList.add('reveal');
+
+wrong++;
+
 }
 
-function nextQ() {
-  idx++;
-  if (idx < questions.length) { renderQ(); return; }
-  saveScore(userName, score, questions.length, history);
-  showScore();
+updateTopbar();
+
+history.push({
+question:q.q,
+your:q.opts[i],
+correct:q.opts[q.ans],
+isCorrect:i===q.ans
+});
+
+document.getElementById('explainBox').innerHTML =
+`<strong>解析：</strong> ${q.exp}`;
+
+document.getElementById('nextBtn').style.display='inline-block';
+
 }
 
-function showScore() {
-  document.getElementById('quizScreen').style.display = 'none';
-  const ss = document.getElementById('scoreScreen');
-  ss.style.display = 'block';
-  const pct = Math.round(score / questions.length * 100);
-  const grade = pct >= 90 ? '🎖 優秀' : pct >= 70 ? '👍 良好' : pct >= 60 ? '📚 及格' : '💪 繼續加油';
-  const wrong = history.filter(h => !h.correct);
-  const records = loadScores().slice(-6).reverse();
+function nextQ(){
 
-  ss.innerHTML = `
-    <div class="score-wrap">
-      <div class="score-ring">
-        <div class="score-num">${score}/${questions.length}</div>
-        <div class="score-lbl">答對題數</div>
-      </div>
-      <div class="score-grade">${grade}</div>
-      <div class="score-pct">${userName} 的正確率：<strong>${pct}%</strong></div>
-      <div class="stats-grid">
-        <div class="stat-box"><div class="stat-val" style="color:var(--green-text)">${score}</div><div class="stat-key">答對</div></div>
-        <div class="stat-box"><div class="stat-val" style="color:var(--red-text)">${questions.length - score}</div><div class="stat-key">答錯</div></div>
-        <div class="stat-box"><div class="stat-val">${pct}%</div><div class="stat-key">正確率</div></div>
-      </div>
-      ${wrong.length > 0 ? `
-        <div style="text-align:left;margin-bottom:1.5rem;">
-          <div class="section-title">📝 答錯的題目（${wrong.length} 題）</div>
-          ${wrong.map(h => `
-            <div class="h-row">
-              <div class="h-dot no">✕</div>
-              <div class="h-q">${h.q}
-                <div class="h-ans">你的答案：${h.yourAns}　｜　正確答案：${h.rightAns}</div>
-              </div>
-            </div>`).join('')}
-        </div>` : `<div style="padding:12px 0;font-size:15px;color:var(--green-text);font-weight:500;">🎉 全部答對，太厲害了！</div>`}
-      ${records.length > 0 ? `
-        <div class="lb-section">
-          <div class="section-title">📊 近期成績紀錄</div>
-          ${records.map((r, ri) => `
-            <div class="lb-row">
-              <span style="font-size:12px;color:var(--text3);width:20px;">#${ri+1}</span>
-              <span class="lb-name">${r.name}</span>
-              <span class="lb-score">${r.score}/${r.total}</span>
-              <span style="font-size:12px;color:var(--teal);font-weight:600;margin-left:4px;">${r.pct}%</span>
-              <span class="lb-date">${r.date}</span>
-            </div>`).join('')}
-        </div>` : ''}
-      <div style="margin-top:1.5rem;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-        <button class="green-btn" onclick="restartQuiz()">重新測驗</button>
-        <button style="padding:11px 20px;border-radius:10px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font-size:14px;font-family:inherit;cursor:pointer;" onclick="exportCSV()">匯出成績 CSV</button>
-      </div>
-    </div>`;
+idx++;
+
+if(idx < questions.length){
+
+renderQ();
+
+}else{
+
+showScore();
+
 }
 
-function restartQuiz() {
-  idx = 0; score = 0; answered = false; history.length = 0;
-  document.getElementById('scoreScreen').style.display = 'none';
-  document.getElementById('nameScreen').style.display = 'block';
-  document.getElementById('nameInput').value = '';
 }
 
-function exportCSV() {
-  const records = loadScores();
-  if (!records.length) { alert('目前沒有成績資料'); return; }
-  const header = '姓名,答對題數,總題數,正確率,測驗時間\n';
-  const rows = records.map(r => `"${r.name}",${r.score},${r.total},${r.pct}%,"${r.date}"`).join('\n');
-  const blob = new Blob(['\uFEFF' + header + rows], { type: 'text/csv;charset=utf-8;' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'html_quiz_scores.csv'; a.click();
+function showScore(){
+
+document.getElementById('quizScreen').style.display='none';
+
+const pct = Math.round(score/questions.length*100);
+
+document.getElementById('scoreScreen').style.display='block';
+
+const wrongItems = history.filter(h=>!h.isCorrect);
+
+document.getElementById('scoreScreen').innerHTML = `
+
+<h1>${userName} 的測驗結果</h1>
+
+<div class="summary-grid">
+
+<div class="summary-card">
+<div class="summary-number">${score}</div>
+<div>答對</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-number">${wrong}</div>
+<div>答錯</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-number">${pct}%</div>
+<div>正確率</div>
+</div>
+
+</div>
+
+<h2>🧠 AI 錯題分析</h2>
+
+${wrongItems.length===0 ? `
+<p>🎉 恭喜全部答對！</p>
+` : wrongItems.map(h=>`
+<div style="padding:15px;border:1px solid #ddd;border-radius:12px;margin-bottom:12px;">
+<strong>${h.question}</strong><br><br>
+❌ 你的答案：${h.your}<br>
+✅ 正確答案：${h.correct}
+</div>
+`).join('')}
+
+<br>
+
+<button onclick="location.reload()" style="background:#222;color:white;">
+重新測驗
+</button>
+
+`;
+
 }
+
 </script>
+
 </body>
 </html>
