@@ -4,128 +4,146 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 智慧 HTML 測驗系統</title>
-
 <style>
-
-body{
-font-family:Arial,sans-serif;
-background:#f5f5f5;
+body {
+font-family: Arial,sans-serif;
+background:#f4f6f9;
 padding:20px;
 }
 
-.card{
-max-width:760px;
+.card {
+max-width:800px;
 margin:auto;
 background:white;
 padding:25px;
-border-radius:15px;
-box-shadow:0 2px 12px rgba(0,0,0,.1);
+border-radius:18px;
+box-shadow:0 3px 14px rgba(0,0,0,.1);
 }
 
-.topbar{
+.topbar {
 display:flex;
 justify-content:space-between;
-align-items:center;
+gap:15px;
 margin-bottom:20px;
-font-size:14px;
+flex-wrap:wrap;
 }
 
-.progress-box{
-background:#eef6ff;
-padding:8px 14px;
-border-radius:10px;
-}
-
-.score-box{
-background:#ecfff0;
-padding:8px 14px;
-border-radius:10px;
-}
-
-button{
+.progress-box {
+background:#eef4ff;
 padding:12px 16px;
-margin-top:10px;
+border-radius:12px;
+font-weight:bold;
+}
+
+.answer-wrap {
+display:flex;
+gap:12px;
+}
+
+.correct-box {
+background:#e8fff0;
+padding:12px 16px;
+border-radius:12px;
+font-weight:bold;
+color:#157347;
+border:2px solid #b7ebc6;
+}
+
+.wrong-box {
+background:#fff0f0;
+padding:12px 16px;
+border-radius:12px;
+font-weight:bold;
+color:#c62828;
+border:2px solid #f3b0b0;
+}
+
+.opt-btn {
+display:block;
+width:100%;
+padding:14px;
+margin-bottom:12px;
+text-align:left;
+border-radius:12px;
+border:1px solid #ccc;
+background:white;
 cursor:pointer;
-border:none;
-border-radius:10px;
 font-size:15px;
 }
 
-.opt-btn{
-display:block;
-width:100%;
-margin-bottom:10px;
-text-align:left;
-background:#fafafa;
-border:1px solid #ddd;
+.opt-btn:hover {
+background:#f7f7f7;
 }
 
-.opt-btn:hover{
-background:#f0f0f0;
+.correct {
+background:#dff5e3;
 }
 
-.correct{
-background:#dff0d8;
+.wrong {
+background:#ffe1e1;
 }
 
-.wrong{
-background:#f2dede;
+.reveal {
+background:#dceeff;
 }
 
-.reveal{
-background:#d9edf7;
+button {
+padding:12px 18px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-size:15px;
 }
 
-#explainBox{
+#explainBox {
 margin-top:15px;
 padding:15px;
-background:#f8f8f8;
-border-radius:10px;
-line-height:1.6;
+background:#fafafa;
+border-radius:12px;
+line-height:1.7;
 }
 
-.summary-grid{
+.summary-grid {
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:15px;
 margin:20px 0;
 }
 
-.summary-card{
-background:#fafafa;
-padding:15px;
-border-radius:12px;
+.summary-card {
+padding:20px;
+border-radius:14px;
 text-align:center;
+background:#fafafa;
 border:1px solid #eee;
 }
 
-.summary-number{
-font-size:28px;
+.summary-number {
+font-size:32px;
 font-weight:bold;
 }
 
+@media(max-width:600px){
+.summary-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
-
 <body>
 
 <div class="card">
 
 <div id="nameScreen">
-
 <h1>AI 智慧 HTML 測驗系統</h1>
-
-<p>請輸入姓名後開始測驗</p>
+<p>共 20 題｜請輸入姓名後開始測驗</p>
 
 <input id="nameInput" placeholder="姓名或學號"
-style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
+style="width:100%;padding:14px;border-radius:12px;border:1px solid #ccc;">
 
 <br><br>
 
-<button onclick="startQuiz()" style="background:#222;color:white;">
+<button onclick="startQuiz()" style="background:#111;color:white;">
 開始測驗
 </button>
-
 </div>
 
 <div id="quizScreen" style="display:none;">
@@ -133,12 +151,17 @@ style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
 <div class="topbar">
 
 <div class="progress-box">
-📘 進度：<span id="progressText">1 / 10</span>
+📘 作答進度：<span id="progressText"></span>
 </div>
 
-<div class="score-box">
+<div class="answer-wrap">
+<div class="correct-box">
 ✅ 答對：<span id="scoreText">0</span>
+</div>
+
+<div class="wrong-box">
 ❌ 答錯：<span id="wrongText">0</span>
+</div>
 </div>
 
 </div>
@@ -151,7 +174,7 @@ style="width:100%;padding:12px;border-radius:10px;border:1px solid #ccc;">
 
 <button id="nextBtn"
 onclick="nextQ()"
-style="display:none;background:#222;color:white;">
+style="display:none;background:#111;color:white;">
 下一題
 </button>
 
@@ -164,18 +187,26 @@ style="display:none;background:#222;color:white;">
 <script>
 
 const questions = [
-
-{q:"HTML 的全名是什麼？",opts:["HyperText Markup Language","HighTech Marking Links","HyperTool Main Language"],ans:0,exp:"HTML 代表超文字標記語言。"},
-{q:"HTML 的本質是什麼？",opts:["程式語言","標記語言","影像格式"],ans:1,exp:"HTML 是標記語言。"},
-{q:"伺服器與瀏覽器之間透過什麼協定進行對話？",opts:["HTML","HTTP","CSS"],ans:1,exp:"HTTP 是網頁傳輸協定。"},
-{q:"網頁檔案的預設主檔案名稱通常叫什麼？",opts:["main.html","home.html","index.html"],ans:2,exp:"index.html 是預設首頁檔案。"},
-{q:"HTML 標籤層層包裹的結構稱為什麼？",opts:["網狀結構","巢狀結構","水平結構"],ans:1,exp:"HTML 使用巢狀結構。"},
-{q:"實際在網頁畫面中看到的內容，是寫在哪個標籤內？",opts:["&lt;head&gt;","&lt;body&gt;","&lt;meta&gt;"],ans:1,exp:"&lt;body&gt; 包含網頁可見內容。"},
-{q:"代表最重要大標題的標籤是？",opts:["&lt;h6&gt;","&lt;h1&gt;","&lt;p&gt;"],ans:1,exp:"&lt;h1&gt; 是最高層級標題。"},
-{q:"HTML5 語意標籤中，&lt;nav&gt; 的主要用途是？",opts:["放廣告","放導覽列","放版權"],ans:1,exp:"&lt;nav&gt; 用於網站導覽。"},
-{q:"網頁底部版權資訊通常放在哪個標籤？",opts:["&lt;header&gt;","&lt;section&gt;","&lt;footer&gt;"],ans:2,exp:"&lt;footer&gt; 用於頁尾資訊。"},
-{q:"想建立有順序的清單要用哪個標籤？",opts:["&lt;ul&gt;","&lt;ol&gt;","&lt;li&gt;"],ans:1,exp:"&lt;ol&gt; 是有序清單。"}
-
+{q:"HTML 的全名是什麼？",opts:['HyperText Markup Language', 'HighTech Marking Links', 'HyperTool Main Language'],ans:0,exp:"HTML 代表超文字標記語言。"},
+{q:"HTML 的本質是什麼？",opts:['程式語言', '標記語言', '影像格式'],ans:1,exp:"HTML 是標記語言。"},
+{q:"伺服器與瀏覽器之間透過什麼協定進行對話？",opts:['HTML', 'HTTP', 'CSS'],ans:1,exp:"HTTP 是網頁傳輸協定。"},
+{q:"網頁檔案的預設主檔案名稱通常叫什麼？",opts:['main.html', 'home.html', 'index.html'],ans:2,exp:"index.html 是預設首頁檔案。"},
+{q:"HTML 標籤層層包裹的結構稱為什麼？",opts:['網狀結構', '巢狀結構', '水平結構'],ans:1,exp:"HTML 使用巢狀結構。"},
+{q:"實際在網頁畫面中看到的內容，是寫在哪個標籤內？",opts:['&lt;head&gt;', '&lt;body&gt;', '&lt;meta&gt;'],ans:1,exp:"&lt;body&gt; 包含網頁可見內容。"},
+{q:"代表最重要大標題的標籤是？",opts:['&lt;h6&gt;', '&lt;h1&gt;', '&lt;p&gt;'],ans:1,exp:"&lt;h1&gt; 是最高層級標題。"},
+{q:"HTML5 語意標籤中，&lt;nav&gt; 的主要用途是？",opts:['放廣告', '放導覽列', '放版權'],ans:1,exp:"&lt;nav&gt; 用於網站導覽。"},
+{q:"網頁底部版權資訊通常放在哪個標籤？",opts:['&lt;header&gt;', '&lt;section&gt;', '&lt;footer&gt;'],ans:2,exp:"&lt;footer&gt; 用於頁尾資訊。"},
+{q:"想建立有順序的清單要用哪個標籤？",opts:['&lt;ul&gt;', '&lt;ol&gt;', '&lt;li&gt;'],ans:1,exp:"&lt;ol&gt; 是有序清單。"},
+{q:"超連結標籤 &lt;a&gt; 使用哪個屬性指定網址？",opts:['src', 'href', 'alt'],ans:1,exp:"href 用來指定連結網址。"},
+{q:"圖片標籤 &lt;img&gt; 的替代文字屬性是？",opts:['title', 'alt', 'href'],ans:1,exp:"alt 是圖片替代文字。"},
+{q:"哪個標籤可強制換行？",opts:['&lt;br&gt;', '&lt;hr&gt;', '&lt;p&gt;'],ans:0,exp:"&lt;br&gt; 可強制換行。"},
+{q:"哪個標籤代表主要內容區？",opts:['&lt;main&gt;', '&lt;div&gt;', '&lt;aside&gt;'],ans:0,exp:"&lt;main&gt; 代表頁面主要內容。"},
+{q:"HTML 註解的正確寫法是？",opts:['// 註解', '/* 註解 */', '&lt;!-- 註解 --&gt;'],ans:2,exp:"HTML 註解使用 &lt;!-- --&gt;。"},
+{q:"哪個標籤可建立表格列？",opts:['&lt;td&gt;', '&lt;table&gt;', '&lt;tr&gt;'],ans:2,exp:"&lt;tr&gt; 代表表格列。"},
+{q:"colspan 的用途是？",opts:['垂直合併', '水平合併', '設定邊框'],ans:1,exp:"colspan 用於水平跨欄。"},
+{q:"target='_blank' 的作用是？",opts:['新分頁開啟', '重新整理', '下載檔案'],ans:0,exp:"_blank 可在新分頁開啟。"},
+{q:"哪個標籤可插入圖片？",opts:['&lt;img&gt;', '&lt;picture&gt;', '&lt;src&gt;'],ans:0,exp:"&lt;img&gt; 用來插入圖片。"},
+{q:"CSS 通常使用哪種副檔名？",opts:['.html', '.css', '.js'],ans:1,exp:"CSS 檔案副檔名是 .css。"}
 ];
 
 let idx = 0;
@@ -185,36 +216,26 @@ let history = [];
 let userName = '';
 
 function startQuiz(){
-
 const n = document.getElementById('nameInput').value.trim();
-
 if(!n){
 alert('請輸入姓名');
 return;
 }
-
-userName = n;
-
+userName=n;
 document.getElementById('nameScreen').style.display='none';
 document.getElementById('quizScreen').style.display='block';
-
 renderQ();
-
 }
 
 function updateTopbar(){
-
 document.getElementById('progressText').innerText =
 `${idx+1} / ${questions.length}`;
 
 document.getElementById('scoreText').innerText = score;
-
 document.getElementById('wrongText').innerText = wrong;
-
 }
 
 function renderQ(){
-
 updateTopbar();
 
 const q = questions[idx];
@@ -223,51 +244,33 @@ document.getElementById('qText').innerHTML =
 `Q${idx+1}. ${q.q}`;
 
 const area = document.getElementById('optionsArea');
-
 area.innerHTML='';
 
 q.opts.forEach((o,i)=>{
-
-const btn = document.createElement('button');
-
+const btn=document.createElement('button');
 btn.className='opt-btn';
-
 btn.innerHTML=o;
-
 btn.onclick=()=>pick(i);
-
 area.appendChild(btn);
-
 });
 
 document.getElementById('explainBox').innerHTML='';
-
 document.getElementById('nextBtn').style.display='none';
-
 }
 
 function pick(i){
-
-const q = questions[idx];
-
-const btns = document.querySelectorAll('.opt-btn');
+const q=questions[idx];
+const btns=document.querySelectorAll('.opt-btn');
 
 btns.forEach(b=>b.disabled=true);
 
 if(i===q.ans){
-
 btns[i].classList.add('correct');
-
 score++;
-
-}else{
-
+} else {
 btns[i].classList.add('wrong');
-
 btns[q.ans].classList.add('reveal');
-
 wrong++;
-
 }
 
 updateTopbar();
@@ -283,36 +286,28 @@ document.getElementById('explainBox').innerHTML =
 `<strong>解析：</strong> ${q.exp}`;
 
 document.getElementById('nextBtn').style.display='inline-block';
-
 }
 
 function nextQ(){
-
 idx++;
 
-if(idx < questions.length){
-
+if(idx<questions.length){
 renderQ();
-
-}else{
-
+} else {
 showScore();
-
 }
-
 }
 
 function showScore(){
-
 document.getElementById('quizScreen').style.display='none';
 
-const pct = Math.round(score/questions.length*100);
+const pct=Math.round(score/questions.length*100);
 
 document.getElementById('scoreScreen').style.display='block';
 
-const wrongItems = history.filter(h=>!h.isCorrect);
+const wrongItems=history.filter(h=>!h.isCorrect);
 
-document.getElementById('scoreScreen').innerHTML = `
+document.getElementById('scoreScreen').innerHTML=`
 
 <h1>${userName} 的測驗結果</h1>
 
@@ -347,14 +342,11 @@ ${wrongItems.length===0 ? `
 </div>
 `).join('')}
 
-<br>
-
-<button onclick="location.reload()" style="background:#222;color:white;">
+<button onclick="location.reload()"
+style="background:#111;color:white;margin-top:20px;">
 重新測驗
 </button>
-
 `;
-
 }
 
 </script>
